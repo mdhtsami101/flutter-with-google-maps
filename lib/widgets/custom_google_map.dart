@@ -31,8 +31,10 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     return Stack(
       children: [
         GoogleMap(
+            mapType: MapType.normal,
             onMapCreated: (controller) {
               googleMapController = controller;
+              initMapStyle();
             },
             // cameraTargetBounds: CameraTargetBounds(
             //   LatLngBounds(
@@ -66,6 +68,12 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
         ),
       ],
     );
+  }
+
+  void initMapStyle() async {
+    var nightMapStyle = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_styles/night_map_style.json');
+    googleMapController.setMapStyle(nightMapStyle);
   }
 }
 
