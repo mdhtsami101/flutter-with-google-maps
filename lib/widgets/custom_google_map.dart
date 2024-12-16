@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_with_google_maps/models/place_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CustomGoogleMap extends StatefulWidget {
@@ -16,6 +17,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
       target: const LatLng(30.550526107874543, 31.011240923996862),
       zoom: 12,
     );
+    initMarkers();
     super.initState();
   }
 
@@ -26,11 +28,13 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   }
 
   late GoogleMapController googleMapController;
+  Set<Marker> markers = {};
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         GoogleMap(
+            markers: markers,
             mapType: MapType.normal,
             onMapCreated: (controller) {
               googleMapController = controller;
@@ -74,6 +78,36 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     var nightMapStyle = await DefaultAssetBundle.of(context)
         .loadString('assets/map_styles/night_map_style.json');
     googleMapController.setMapStyle(nightMapStyle);
+  }
+
+  void initMarkers() async {
+    var customMarkerIcon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(
+          size: Size.fromHeight(250),
+        ),
+        'assets/images/icons8-marker-50.png');
+    var myMarkers = places
+        .map(
+          (e) => Marker(
+            icon: customMarkerIcon,
+            infoWindow: InfoWindow(
+              title: e.name,
+            ),
+            position: e.latlng,
+            markerId: MarkerId(
+              e.id.toString(),
+            ),
+          ),
+        )
+        .toSet();
+
+    markers.addAll(myMarkers);
+    setState(() {});
+    // var myMarker = const Marker(
+    //   markerId: const MarkerId('1'),
+    //   position: LatLng(30.550526107874543, 31.011240923996862),
+    // );
+    // markers.add(myMarker);
   }
 }
 
