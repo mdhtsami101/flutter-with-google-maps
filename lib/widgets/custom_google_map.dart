@@ -14,14 +14,58 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   void initState() {
     initialCameraPosition = const CameraPosition(
       target: const LatLng(30.550526107874543, 31.011240923996862),
-      zoom: 15,
+      zoom: 12,
     );
     super.initState();
   }
 
   @override
+  void dispose() {
+    googleMapController.dispose();
+    super.dispose();
+  }
+
+  late GoogleMapController googleMapController;
+  @override
   Widget build(BuildContext context) {
-    return GoogleMap(initialCameraPosition: initialCameraPosition);
+    return Stack(
+      children: [
+        GoogleMap(
+            onMapCreated: (controller) {
+              googleMapController = controller;
+            },
+            // cameraTargetBounds: CameraTargetBounds(
+            //   LatLngBounds(
+            //     southwest: const LatLng(30.55962380873864, 30.99141298170685),
+            //     northeast: const LatLng(30.572778692380112, 31.035787447506287),
+            //   ),
+            // ),
+            initialCameraPosition: initialCameraPosition),
+        Positioned(
+          bottom: 16,
+          left: 16,
+          right: 16,
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {});
+              googleMapController.animateCamera(
+                CameraUpdate.newLatLng(
+                  const LatLng(31.193749161934008, 29.915166145899803),
+                ),
+                // CameraUpdate.newCameraPosition(
+                //   const CameraPosition(
+                //     target:
+                //         const LatLng(31.193749161934008, 29.915166145899803),
+                //     zoom: 12,
+                //   ),
+                // ),
+              );
+            },
+            child: const Text('Change location'),
+          ),
+        ),
+      ],
+    );
   }
 }
 
