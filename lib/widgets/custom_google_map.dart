@@ -22,6 +22,7 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     );
     initMarkers();
     initPolyLines();
+    initPolyGons();
     super.initState();
   }
 
@@ -34,12 +35,14 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
   late GoogleMapController googleMapController;
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
+  Set<Polygon> polygons = {};
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         GoogleMap(
-            polylines: polylines,
+            polygons: polygons,
+            // polylines: polylines,
             zoomControlsEnabled: false,
             markers: markers,
             mapType: MapType.normal,
@@ -158,6 +161,29 @@ class _CustomGoogleMapState extends State<CustomGoogleMap> {
     );
     polylines.add(polyline);
     polylines.add(polyline2);
+  }
+
+  void initPolyGons() {
+    Polygon polygon = Polygon(
+      holes: const [
+        [
+          LatLng(30.555217266073882, 31.002702654689845),
+          LatLng(30.555414587784995, 30.978413768064296),
+          LatLng(30.576328413793437, 30.975205801906206),
+          LatLng(30.579682098413738, 30.999494688531755),
+        ],
+      ],
+      strokeWidth: 1,
+      fillColor: Colors.black.withOpacity(0.4),
+      points: const [
+        LatLng(30.535284751001363, 30.975396451763366),
+        LatLng(30.54924703530867, 31.009091079084364),
+        LatLng(30.59796240862012, 31.039924841821506),
+        LatLng(30.584280786561106, 30.960138507316124),
+      ],
+      polygonId: const PolygonId('1'),
+    );
+    polygons.add(polygon);
   }
 }
 
